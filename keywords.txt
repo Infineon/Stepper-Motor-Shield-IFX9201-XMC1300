@@ -11,17 +11,19 @@
 #######################################
 
 begin	KEYWORD2
-end		KEYWORD2
+end	KEYWORD2
+configure	KEYWORD2
+configRead	KEYWORD2
 enable	KEYWORD2
 disable	KEYWORD2
 setSpeed	KEYWORD2
 setDutyRatio	KEYWORD2
 step	KEYWORD2
-turn_degree	KEYWORD2
-turn_revolution	KEYWORD2
+move_degree	KEYWORD2
+move_revolution	KEYWORD2
 update_accumulated_steps	KEYWORD2
 reset_motor	KEYWORD2
-stepMotor	KEYWORD2
+reset_motor	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
@@ -32,4 +34,9 @@ Stepper_motor	KEYWORD2
 #######################################
 # Constants (LITERAL1)
 #######################################
+IFX9201_STEPPERMOTOR_STEPPINGMODE_FULL	LITERAL1
+IFX9201_STEPPERMOTOR_STEPPINGMODE_HALF	LITERAL1
+IFX9201_STEPPERMOTOR_STEPPINGMODE_MICROSTEP	LITERAL1
+IFX9201_STEPPERMOTOR_STEPPINGMODE_DO_NOT_STORE_CONFIG	LITERAL1
+IFX9201_STEPPERMOTOR_STEPPINGMODE_STORE_CONFIG	LITERAL1
 

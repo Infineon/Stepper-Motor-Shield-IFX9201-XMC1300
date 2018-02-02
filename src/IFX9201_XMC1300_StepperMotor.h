@@ -2,6 +2,37 @@
 #ifndef IFX9201_StepperMotor_h
 #define IFX9201_StepperMotor_h
 
+#define IFX9201_STEPPERMOTOR_STD_DIS	11
+#define IFX9201_STEPPERMOTOR_STD_STP	10
+#define IFX9201_STEPPERMOTOR_STD_DIR	9
+
+#define IFX9201_STEPPERMOTOR_SERIAL_INTERFACE_SPEED	19200
+
+#define CONFIG_SERIAL_WRITE_CMD 	165u
+#define CONFIG_SERIAL_READ_CMD 		166u
+
+typedef enum IFX9201_STEPPERMOTOR_SteppingMode
+{
+	IFX9201_STEPPERMOTOR_STEPPINGMODE_FULL = 0x01u,				/**< Fullstep. */
+	IFX9201_STEPPERMOTOR_STEPPINGMODE_HALF = 0x02u,				/**< Halfstep. */
+	IFX9201_STEPPERMOTOR_STEPPINGMODE_MICROSTEP = 0x04			/**< Microstep. */
+} IFX9201_STEPPERMOTOR_SteppingMode_t;
+
+typedef enum IFX9201_STEPPERMOTOR_StoreConfig
+{
+	IFX9201_STEPPERMOTOR_STEPPINGMODE_DO_NOT_STORE_CONFIG = 0x00u,	/**< Do. */
+	IFX9201_STEPPERMOTOR_STEPPINGMODE_STORE_CONFIG = 0x01u			/**< Do not. */
+} IFX9201_STEPPERMOTOR_StoreConfig_t;
+
+typedef struct IFX9201_STEPPERMOTOR_config{
+	IFX9201_STEPPERMOTOR_SteppingMode_t SteppingpMode;			/**< Steppingp Mode. */
+	uint32_t FreqPWMOut;										/**< FreqPWMOut. */
+	uint32_t PWMDutyCycleNormFactor;							/**< PWMDutyCycleNormFactor (0 - 10000). */
+	uint32_t NumMicrosteps;										/**< Number of Microsteps (SteppingpMode == IFX9201_STEPPERMOTOR_STEPPINGMODE_MICROSTEP) */
+	IFX9201_STEPPERMOTOR_StoreConfig_t Store;					/**< Store or do not store config in NVM of Stepper Motor */
+}IFX9201_STEPPERMOTOR_config_t;
+
+
 // library interface description
 class Stepper_motor {
   public:
@@ -10,6 +41,12 @@ class Stepper_motor {
 
 	// set pins' type as OUTPUT, set default speed and enable the stepper motor
 	void begin();
+
+	// Configure the Stepper Motor, HardwareSerial used -> needs to be connected to Debug Interface of Stepper Motor Control Shield
+	bool configure(HardwareSerial &bus, IFX9201_STEPPERMOTOR_config_t *config);
+
+	// Read current Config from the Stepper Motor, HardwareSerial used -> needs to be connected to Debug Interface of Stepper Motor Control Shield
+	void configRead(HardwareSerial &bus, IFX9201_STEPPERMOTOR_config_t *config);
 
 	// disable the stepper motor, set default speed and set pins' type as INPUT
 	void end();
@@ -45,6 +82,7 @@ class Stepper_motor {
     uint16_t version(void);
 
   private:
+    void pinInit(void);
     void stepMotor(bool high_low);
 
     int16_t direction;            	// Direction of rotation

@@ -25,15 +25,96 @@ Stepper_motor::Stepper_motor(uint16_t steps, uint16_t pin_dir, uint16_t pin_stp,
 
 void Stepper_motor::begin()
 {
-	// setup the pins on the micro-controller:
-	pinMode(motor_pin_dir, OUTPUT);
-	pinMode(motor_pin_stp, OUTPUT);
-	pinMode(motor_pin_dis, OUTPUT);
+	pinInit();
 
 	// set the default speed at 1 rpm
 	step_delay = 60L * 1000L * 1000L / (number_of_steps * 1);
 
 	enable();
+}
+
+void Stepper_motor::pinInit(void)
+{
+	// Set all Pins to LOW
+	digitalWrite(motor_pin_dir, LOW);
+	digitalWrite(motor_pin_stp, LOW);
+	digitalWrite(motor_pin_dis, LOW);
+
+	// setup the pins on the micro-controller:
+	pinMode(motor_pin_dir, OUTPUT);
+	pinMode(motor_pin_stp, OUTPUT);
+	pinMode(motor_pin_dis, OUTPUT);
+}
+
+bool Stepper_motor::configure(HardwareSerial &bus, IFX9201_STEPPERMOTOR_config_t *config)
+{
+	bool success = true;
+	uint8_t data_to_send[32] = {0};
+	data_to_send[17] =	 (uint8_t)config->SteppingpMode;
+	data_to_send[18] =	 (uint8_t)(config->FreqPWMOut	>> 24);
+	data_to_send[19] =	 (uint8_t)(config->FreqPWMOut 	>> 16);
+	data_to_send[20] =	 (uint8_t)(config->FreqPWMOut 	>> 8);
+	data_to_send[21] =	 (uint8_t)(config->FreqPWMOut);
+	data_to_send[22] =	 (uint8_t)(config->PWMDutyCycleNormFactor	>> 24);
+	data_to_send[23] =	 (uint8_t)(config->PWMDutyCycleNormFactor 	>> 16);
+	data_to_send[24] =	 (uint8_t)(config->PWMDutyCycleNormFactor 	>> 8);
+	data_to_send[25] =	 (uint8_t)(config->PWMDutyCycleNormFactor);
+	data_to_send[26] =	 (uint8_t)config->NumMicrosteps;
+
+	data_to_send[27] = (uint8_t)config->Store;
+	data_to_send[30] = CONFIG_SERIAL_WRITE_CMD;
+
+	pinInit();
+
+	bus.begin(IFX9201_STEPPERMOTOR_SERIAL_INTERFACE_SPEED);
+
+	bus.write(data_to_send, 32u);
+
+	return success;
+}
+
+void Stepper_motor::configRead(HardwareSerial &bus, IFX9201_STEPPERMOTOR_config_t *config)
+{
+	uint8_t num_received_bytes = 0u;
+	uint32_t start_read = millis();
+	uint8_t data[32] = {0};
+	data[30] = CONFIG_SERIAL_READ_CMD;
+
+	pinInit();
+
+	bus.begin(IFX9201_STEPPERMOTOR_SERIAL_INTERFACE_SPEED);
+
+	bus.write(data, 32u);
+
+	while(num_received_bytes < 32)
+	{
+		if(bus.available())
+		{
+			data[num_received_bytes] = bus.read();
+			start_read = millis();
+			num_received_bytes++;
+		}
+		if( (millis() - start_read) > 30u )
+		{
+			break;
+		}
+	}
+
+	if( (num_received_bytes == 32u) && (config != NULL) )
+	{
+		config->SteppingpMode = (IFX9201_STEPPERMOTOR_SteppingMode_t)data[17];
+		config->FreqPWMOut = ((uint32_t)data[18] << 24u) | \
+								((uint32_t)data[19] << 16u) | \
+								((uint32_t)data[20] << 8u) | \
+								((uint32_t)data[21]);
+		config->PWMDutyCycleNormFactor = ((uint32_t)data[22] << 24u) | \
+								((uint32_t)data[23] << 16u) | \
+								((uint32_t)data[24] << 8u) | \
+								((uint32_t)data[25]);
+		config->NumMicrosteps = data[26];
+
+		config->Store = (IFX9201_STEPPERMOTOR_StoreConfig_t)data[27];
+	}
 }
 
 void Stepper_motor::end()
