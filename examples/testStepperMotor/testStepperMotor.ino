@@ -35,7 +35,7 @@ void loop() {
 	delay(1000);
 
 	Serial.println("moves 90 degree in counterclockwise direction");
-	MyStepperMotor.move_degree(-180);
+	MyStepperMotor.move_degree(-90);
 	delay(1000);
 
 	Serial.println("moves 400 steps in clockwise direction");
@@ -48,4 +48,5 @@ void loop() {
 
 	Serial.println("reset the stepper motor to the initial position");
 	MyStepperMotor.reset_motor();
+  delay(2000);
 }
