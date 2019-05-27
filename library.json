@@ -1,0 +1,17 @@
+{
+    "name": "Stepper-Motor-Shield-IFX9201-XMC1300",
+    "keywords": "motor, IFX9201, XMC1300, stepper, actuator, shield",
+    "description": "This library provides an interface to control a stepper motor through Infineon’s Stepper Motor Control Shield with h-bridge IFX9201 and XMC1300 microcontroller",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/Infineon/Stepper-Motor-Shield-IFX9201-XMC1300.git",
+      "branch": "master"
+    },
+    "version":"1.0.0",
+    "frameworks": "arduino",
+    "platforms": [
+        "infineonxmc",
+        "atmelavr"
+    ]
+  }

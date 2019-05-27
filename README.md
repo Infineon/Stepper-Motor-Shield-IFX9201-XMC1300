@@ -1,4 +1,7 @@
 # Stepper-Motor-Shield-IFX9201-XMC1300 Library for Arduino
+
+[![Build Status](https://travis-ci.org/Infineon/Stepper-Motor-Shield-IFX9201-XMC1300.svg?branch=master)](https://travis-ci.org/Infineon/Stepper-Motor-Shield-IFX9201-XMC1300)
+
 <img src="https://github.com/Infineon/Assets/blob/master/Pictures/Stepper-Motor-Control-Shield_with-IFX9201-and-XMC1300.jpg" width="400">
 
 Library of Infineon's [Stepper-Motor-Shield-IFX9201-XMC1300](https://www.infineon.com/cms/de/product/evaluation-boards/kit_xmc1300_ifx9201/) for Arduino.
