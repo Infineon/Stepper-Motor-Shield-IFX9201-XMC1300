@@ -7,7 +7,11 @@
 const int StepsPerRevolution = 200;  // change this to fit the total number of steps per revolution for your motor
 
 #if defined(XMC4700_Relax_Kit)
+
+#include <HardwareSerial.h>
+extern HardwareSerial Serial1;
 #define CONFIG_SERIAL Serial1
+
 #else
 #define CONFIG_SERIAL Serial
 #endif
