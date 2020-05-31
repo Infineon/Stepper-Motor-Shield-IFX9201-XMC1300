@@ -1,4 +1,4 @@
-# Stepper-Motor-Shield-IFX9201-XMC1300 Library for Arduino
+# Stepper Motor Control Shield with IFX9201 & XMC1300 - Library for Arduino
 
 [![Build Status](https://travis-ci.org/Infineon/Stepper-Motor-Shield-IFX9201-XMC1300.svg?branch=master)](https://travis-ci.org/Infineon/Stepper-Motor-Shield-IFX9201-XMC1300)
 
@@ -35,8 +35,66 @@ To install the Stepper Motor Shield IFX9201 XMC1300 Library in the Arduino IDE, 
 
 ![Install Library](https://raw.githubusercontent.com/infineon/assets/master/Pictures/Library_Install_ZIP.png)
 
-## Usage
-Please follow the example sketches in the /examples directory in this library to learn more about the usage of the library.
+## Getting started
+After installing this library in your Arduino IDE, you can do a quick test of your stepper motor, using the example `testStepperMotor.ino`. The default coil current is set to 1A. If your motor is rated for less, please read on below **before** testing the motor. Otherwise it could be damaged.
+
+## Overview
+
+<img src="https://github.com/Infineon/Assets/blob/master/Pictures/ifx9201_stepper_shield_overview.png" width="500">
+
+### Hardware connections
+
+The stepper motor will not be powered through the 5V supply of the Arduino. Please connect an external power source (typ. DC 12-24V) to the PWR_MOT input of your stepper motor shield.
+
+<img src="https://github.com/Infineon/Assets/blob/master/Pictures/ifx9201_stepper_shield_hw_con.png" width="600">
+
+### Configuration
+In this section you learn, how to change the configuration settings of your motor shield to fit your target application.
+
+#### Overview
+In order to change the configuration of your stepper motor shield, please follow these steps:
+1) Open the example sketch `configureStepperMotor.ino` in your Arduino IDE
+2) Adapt the parameters according to your preferences, with help of the *Parameters* section below
+3) Compile and upload the Arduino sketch to your Arduino
+4) Connect the pins as shown in the *Hardware* section below
+5) Press the reset button of the Arduino and wait, until the builtin LED of the Arduino lights up constantly
+6) The new configuration is now running on the stepper motor shield
+7) Remove the serial pin connection from step (4)
+8) Flash your actual motor control code to the Arduino, e.g. the example Sketch `testStepperMotor.ino`
+
+#### Parameters
+In the example sketch `configureStepperMotor.ino` you find the different configuration parameters:
+
+| Parameter     | Options       | Default |
+| :------------ |:--------------|:--------|
+| SteppingMode  | IFX9201_STEPPERMOTOR_STEPPINGMODE_FULL,<br>IFX9201_STEPPERMOTOR_STEPPINGMODE_HALF,<br>IFX9201_STEPPERMOTOR_STEPPINGMODE_MICROSTEP | Full step mode
+| FreqPWMOut    | PWM output frequency.<br>For higher currenty stay at some kHz,<br>for low current up to 20 kHz is possible.<br><br>*Note: The effective frequency may be different in order to limit the current.* | 3000 \[Hz\] |
+| PWMDutyCycleNormFactor | Current limit. Calculated as: *current \[A\] = value / 3333* | 3333 (1A) |
+| NumMicrosteps | Microsteps per full step: 8, 12, 16, 20, 24, ... 128. Only valid in microstepping mode. | n/a |
+| Store         | IFX9201_STEPPERMOTOR_STEPPINGMODE_DO_NOT_STORE_CONFIG,<br>IFX9201_STEPPERMOTOR_STEPPINGMODE_ STORE_CONFIG.<br><br>**If set**, the non-volatile memory of the onboard microcontroller will be updated with the new values.<br>**If not set**, the configuration will be set to the default parameters after each power cycle.<br><br>*Note: The non-volatile memory has a high, but limited amount of writing cycles, so it is not recommanded to e.g. script a regular re-write of the configuration parameters to the memory.*
+
+#### Hardware connections
+In order to write the new parameters to the onboard microntroller, the serial port (UART) of the Arduino is used. Before executing the `configureStepperMotor.ino` sketch, you have to connect the onboard microcontroller serial port to the one of the Arduino as shown here:
+
+<img src="https://github.com/Infineon/Assets/blob/master/Pictures/ifx9201_stepper_shield_serial_con.png" width="400">
+
+**Important note:** The Arduino cannot be flashed via USB, while these pins are connected. Please disconnect them, before trying to flash the Arduino.
+
+Please refer to the [Board User Manual](https://www.infineon.com/dgdl/Infineon-Stepper_Motor_Control_Shield_with_IFX9201SG_XMC1300_for_Arduino-UM-UM-v01_00-EN.pdf?fileId=5546d462617643590161c23fa5120aa1) for additional and more detailed information.
+
+## Remarks
+
+### Heat & Cooling
+The two IFX9201 half bridges on the stepper motor shield can become very hot during operation. Do not touch them!
+The half bridges have a temperature protection and will not die because of overheating. However, if they overheat, they will disable the output until they cool down. Usually, that's not desired, so lets see what we can do about that:
+
+| Motor coil current | Minimum cooling |
+| :----------------- |:----------------|
+| < 2A               | none            |
+| < 3A               | small passive heatsink e.g. [this](https://www.amazon.de/gp/product/B07JJK92DJ) |
+| <= 5A              | additional cooling effort, e.g. active cooling, proper heatsink |
+
+*Note: these statements are empirical values and depend on environment temperature, operation time and supply voltage. Values are based on an environment temperature of 21°C, supply voltage of 12V and operation time ~1h. For long/continous operation proper cooling is always recommended.*
 
 ## Board Information, Datasheet and Additional Information
 A PDF summarizing the features and layout of the Stepper Motor Shield IFX9201 XMC1300 is stored on the Infineon homepage [here](https://www.infineon.com/dgdl/Infineon-Stepper_Motor_Control_Shield_with_IFX9201SG_XMC1300_for_Arduino-UM-UM-v01_00-EN.pdf?fileId=5546d462617643590161c23fa5120aa1).
