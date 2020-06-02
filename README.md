@@ -38,7 +38,7 @@ To install the Stepper Motor Shield IFX9201 XMC1300 Library in the Arduino IDE, 
 ## Getting started
 After installing this library in your Arduino IDE, you can do a quick test of your stepper motor, using the example `testStepperMotor.ino`. The default coil current is set to 1A. If your motor is rated for less, please read on below **before** testing the motor. Otherwise it could be damaged.
 
-## Overview
+### Overview
 
 <img src="https://github.com/Infineon/Assets/blob/master/Pictures/ifx9201_stepper_shield_overview.png" width="500">
 
