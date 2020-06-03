@@ -4,7 +4,7 @@ python:
 
 os: linux
 
-dist : ubuntu
+dist : bionic
 
 cache: pip
         
