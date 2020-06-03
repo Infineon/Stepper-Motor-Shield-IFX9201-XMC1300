@@ -2,7 +2,9 @@ language: python
 python:
     - 3.7
 
-sudo: required
+os: linux
+
+dist : ubuntu
 
 cache: pip
         
@@ -10,7 +12,7 @@ branches:
     - master
 
 env:
-    matrix:
+    jobs:
         - PLATFORMIO_CI_SRC=examples/configureStepperMotor
         - PLATFORMIO_CI_SRC=examples/testStepperMotor
 
