@@ -2,17 +2,14 @@ language: python
 python:
     - 3.7
 
-os: linux
-
-dist : bionic
-
 cache: pip
         
 branches:
     - master
+    - bugfix/build-error
 
 env:
-    jobs:
+    matrix:
         - PLATFORMIO_CI_SRC=examples/configureStepperMotor
         - PLATFORMIO_CI_SRC=examples/testStepperMotor
 
