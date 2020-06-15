@@ -6,7 +6,6 @@ cache: pip
         
 branches:
     - master
-    - bugfix/build-error
 
 env:
     matrix:
